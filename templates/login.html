@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block extra_css_files %}
+<link rel="stylesheet" type="text/css" href="{% static 'b_api/css/login.css' %}" />
+{% endblock %} 
+
+
+{% block content %}
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+<form id="loginForm" method="post" action="{% url 'login' %}">
+{% csrf_token %}
+
+  <fieldset>
+    <h1> Please provide <br>
+         your login credentials</h1>
+    <div class="form-group">
+      {{ form.username }}
+    </div>
+    <div class="form-group">
+      {{ form.password }}
+    </div>
+
+    <button type="submit" class="btn btn-default" value="login" >Submit</button>
+  
+  </fieldset>
+
+
+</form>
+
+{% endblock %}
+
+

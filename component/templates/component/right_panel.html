@@ -1,0 +1,116 @@
+<div id="port-form" class="container"></div>
+
+<!-- forms for each port type are inserted here-->
+{% include "component/category_port_form.html" %} 
+{% include "component/float_port_form.html" %} 
+{% include "component/string_port_form.html" %} 
+{% include "component/else_port_form.html" %}
+
+
+
+
+
+<script type="text/javascript" charset="utf-8">
+
+  // 1 - display edit form adapted to the port type selected in the left panel
+  $("#{{name}}_jstree").bind("select_node.jstree", function(evt, data){
+
+    // get selected node
+    var node=data.node
+
+    // 1.1 - select html template
+    switch(node.type){
+      case "category":   
+        var port_form_html_tmpl=$.templates('#category_port_form_html_tmpl');
+        break;
+      case "string":   
+        var port_form_html_tmpl=$.templates('#string_port_form_html_tmpl');
+        break;
+      case "float":   
+        var port_form_html_tmpl=$.templates('#float_port_form_html_tmpl');
+        break;
+      default: 
+        var port_form_html_tmpl=$.templates('#else_port_form_html_tmpl');
+    }
+
+    // 1.2 - change tag delimiters for jsrender templating
+    //$.views.settings.delimiters("{{", "%@");
+
+    // 1.3 - fetch data for templating
+    node_data=get_nodes_data(hidden_text_DOM, node.id, "_all")
+
+    // 1.4 - render right panel html
+    var port_form_html=port_form_html_tmpl.render(node_data);
+     console.dir(port_form_html_tmpl.markup)
+    console.dir(node_data)
+    console.dir(port_form_html)              
+    $('#port-form').html(port_form_html);
+
+ })
+
+
+
+
+  function port_name_onblur(event){
+
+    // update port name in left panel according to the one given in the right panel form
+            
+    // get jstree object
+    var tree=$("#{{name}}_jstree").jstree();
+               
+    // get selected node in left panel jstree 
+    var active_node=$("#{{name}}_jstree").jstree('get_selected');
+ 
+    // get name value in right panel form 
+    var new_name=$(event.target).val();
+
+    // rename jstree node after name provided in right panl form
+    $("#{{name}}_jstree").jstree('rename_node', active_node , new_name );
+            
+    // save changes in hidden textarea
+
+    // save new node name 
+    set_nodes_data(hidden_text_DOM, active_node[0], "name", new_name);
+
+    // save tree structure 
+    jstree_onchange(hidden_text_DOM, tree);
+  }
+
+
+
+
+  function port_description_onblur(event){
+
+    // get jstree object
+    var tree=$("#{{name}}_jstree").jstree();
+
+    // save new value 
+    var active_node=$("#{{name}}_jstree").jstree('get_selected'); 
+    var new_description=$(event.target).val(); 
+    set_nodes_data(hidden_text_DOM, active_node[0], "description", new_description);
+
+    // save tree structure change in hidden field
+    jstree_onchange(hidden_text_DOM, tree);
+  }
+
+
+
+  function port_default_onblur(event){
+
+    // get jstree object
+    var tree=$("#{{name}}_jstree").jstree();
+
+    // save new value in 
+    var active_node=$("#{{name}}_jstree").jstree('get_selected'); 
+    var new_default=$(event.target).val(); 
+    set_nodes_data(hidden_text_DOM, active_node[0], "default", new_default);
+
+    // save tree structure change in hidden field
+    jstree_onchange(hidden_text_DOM, tree);
+  }
+
+ 
+
+</script>
+
+

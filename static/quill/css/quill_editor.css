@@ -1,0 +1,8 @@
+/* CSS used here will be applied after bootstrap.css */
+
+.quill_editor { 
+    width: 100%;
+    height:200px;
+    min-height:200px;
+    margin: 40px auto;
+}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="component">
+        {% if component.published_date %}
+            <div class="date">
+                {{ post.published_date }}
+            </div>
+        {% endif %}
+	    {% if user.is_authenticated %}
+        	<a class="btn btn-default" href="{% url 'component:edit' pk=component.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+	    {% endif %}
+        <h1>{{ component.name }}</h1>
+        <p>{{ component.description|linebreaksbr }}</p>
+    </div>
+{% endblock %}
+
+
+{% block footer %}
+	<a href="{% url 'component:list' %}"> Component list</a>
+{% endblock %}

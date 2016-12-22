@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+
+{% block extra_js_files %}
+       <script src="{% static 'ace_editor/js/ace.js' %}" type="text/javascript" charset="utf-8"></script>
+       <script src="{% static 'quill/js/quill.min.js' %}" type="text/javascript" charset="utf-8"></script>
+       <script src="{% static 'jstree/dist/jstree.min.js' %}" type="text/javascript" charset="utf-8"></script>
+       <script src="{% static 'jsrender/jsrender.min.js' %}" type="text/javascript" charset="utf-8"></script>
+{% endblock %} 
+
+{% block extra_css_files %}
+       <link rel="stylesheet" href="{% static 'ace_editor/css/ace_editor.css' %}">
+       <link rel="stylesheet" href="{% static 'quill/css/quill.snow.css' %}">
+       <link rel="stylesheet" href="{% static 'quill/css/quill_editor.css' %}">
+       <link rel="stylesheet" href="{% static 'jstree/dist/themes/default/style.min.css' %}">
+       <link rel="stylesheet" href="{% static 'css/component.css' %}">
+{% endblock %}
+ 
+{% block content %}
+    <h1>New Component</h1>
+    <form method="POST" class="form">{% csrf_token %}
+
+
+    <!-- Display form errors -->
+    {{ form.non_field_errors }}
+
+
+    <div class="container"><div class="panel-group" id="accordion">
+
+        <!-- 1. General panel  -->
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Generals</a>
+                </h2>
+            </div>
+            <div id="collapse1" class="panel-collapse collapse in">
+                <div class="panel-body">
+       
+                    <!-- 1.1. Input "name"-->    
+                    <div class="fieldWrapper">
+                        {{ form.name.errors }}
+                        <label for="{{ form.name.id_for_label }}">Name:</label>
+                        {{ form.name }}
+                    </div>
+
+                    <!-- 1.2 Input "description"--> 
+                    <div class="fieldWrapper">
+                        {{ form.description.errors }}
+                        {{ form.description }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Inlet Ports panel -->
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Inlet Ports</a>
+                </h2>
+        </div>
+            <div id="collapse2" class="panel-collapse collapse">
+                <div class="panel-body">
+
+                    <!-- 2.1 inlet port editor--> 
+                        {{ form.inlet_ports.errors }}
+                        {{ form.inlet_ports }}
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Outlet Ports panel -->
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Outlet Ports</a>
+                </h2>
+        </div>
+            <div id="collapse3" class="panel-collapse collapse">
+                <div class="panel-body">
+
+                    <!-- 3.1 outlet port editor--> 
+                        {{ form.outlet_ports.errors }}
+                        {{ form.outlet_ports }}                   
+
+                </div>
+            </div>
+        </div>
+        
+        <!-- 3. Function panel -->
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Function</a>
+                </h2>
+            </div>
+            <div id="collapse4" class="panel-collapse collapse">
+                <div class="panel-body">
+
+
+                    <!-- 3.1 Input "function"--> 
+                    <div class="fieldWrapper">
+                        {{ form.function.errors }}
+                        {{ form.function }}
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Jacobian -->
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Jacobian</a>
+                </h2>
+            </div>
+            <div id="collapse5" class="panel-collapse collapse">
+                <div class="panel-body">
+
+                    <!-- 4.1 Input "jacobian"--> 
+                    <div class="fieldWrapper">                        
+                        {{ form.jacobian.errors }}
+                        {{form.jacobian}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+     
+    </div></div>
+       
+        <button type="submit" value="save" class="save btn btn-default">Save</button>
+
+    </form>
+
+{% endblock %}
+

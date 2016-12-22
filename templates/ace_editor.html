@@ -1,0 +1,25 @@
+
+
+<!--<input type="hidden" name=ace_code style="display: none;">-->
+<input type="hidden" name=ace_code">
+<div id="ace_editor">function foo(items) {
+    var x = "All this is syntax highlighted";
+    return x;
+}</div>
+    
+
+
+<script>
+    var ace_editor = ace.edit("ace_editor");
+    ace_editor.setTheme("ace/theme/monokai");
+    ace_editor.getSession().setMode("ace/mode/python");
+    ace_editor.setOptions({
+       maxLines: 15
+    });
+
+   var input = $('input[name="ace_code"]');
+        editor.getSession().on("change", function () {
+        input.val(editor.getSession().getValue());
+    });
+
+</script>

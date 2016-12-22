@@ -1,0 +1,102 @@
+
+
+{% load staticfiles %}
+
+
+
+<html>
+    <head>
+        <title>Be APi</title>
+
+       <!--<script src="{% static 'jquery/js/jquery-3.1.0.min.js' %}"></script>-->
+       <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+       <script src="{% static 'jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
+       <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+       <script src="{% static 'dataTables/media/js/jquery.dataTables.min.js' %}"></script>
+       {% block extra_js_files %}
+       {% endblock %} 
+
+
+       <link rel="stylesheet" href="{% static 'jquery-ui-1.12.1.custom/jquery-ui.min.css' %}">
+       <link rel="stylesheet" href="{% static 'jquery-ui-1.12.1.custom/jquery-ui.theme.min.css' %}">
+       <link rel="stylesheet" href="{% static 'jquery-ui-1.12.1.custom/jquery-ui.structure.min.css' %}">
+       <!--<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+       <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-theme.min.css' %}">-->
+       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+       <link rel="stylesheet" href="{% static 'dataTables/media/css/jquery.dataTables.min.css' %}">
+       <link rel="stylesheet" href="{% static 'b_api/css/b_api.css' %}">
+       {% block extra_css_files %}
+       {% endblock %} 
+    </head>
+
+
+    <body>
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>                        
+                    </button>
+                    <!--<a class="navbar-brand" href="{% url 'home' %}">B Api</a> -->
+                </div>
+             
+                 <div class="collapse navbar-collapse" id="myNavbar"> 
+                    <ul class="nav navbar-nav">
+                        <li> <a href="{% url 'home' %}">B Api</a> </li>
+                        <li> <a href="#">Projects</a> </li>
+                        <li> <a href="#">Simulations</a> </li>
+                        <li> <a href="#">Models</a> </li>
+                        <li> <a href="{% url 'component:list' %}">Components</a> </li>
+                    </ul>
+
+		    {% if user.is_authenticated %}
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="dropdown">
+                                <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <span class="glyphicon glyphicon-user"></span> gregory<span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="">Settings</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+      					
+                    {% endif %}
+
+               </div> 	
+    	    </div>
+        </nav>
+
+    	<div class="content container">
+            {% block content %}
+            {% endblock %}
+    	</div>
+
+    	<div class="footer">
+	    {% block footer %}
+       	    {% endblock %}
+    	</div>
+
+
+    <script>
+        $(function(){
+            $('a').each(function(){
+                if ($(this).prop('href') == window.location.href) {
+                    $(this).addClass('active'); $(this).parents('li').addClass('active');
+                }
+            });
+        });
+    </script>
+
+    <script>
+       {% block extra_javascript %}
+       {% endblock %} 
+    </script>
+   
+    </body>
+</html> 
+

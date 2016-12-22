@@ -1,0 +1,41 @@
+
+.port-editor{
+    width:100%;
+    height:400px;
+}
+
+.port-editor .left-panel{
+    width: 20%;
+    height: 100%;
+    padding:10px;
+    margin:0px;
+    display: inline;
+    float: left;
+    vertical-align: top;
+    overflow:auto;
+}
+
+.port-editor .right-panel{
+    width: 80%;
+    height: 100%;
+    padding:10px;
+    margin:0px;
+    display: inline;
+    float: right;
+    vertical-align: top;
+    overflow:auto;
+}
+
+.port-editor .right-panel #port-form{
+    width: 100%;
+    display: block;
+}
+
+
+.port-editor label {
+  font-weight:bold;
+}
+
+.port-editor textarea {
+   resize: none;
+}

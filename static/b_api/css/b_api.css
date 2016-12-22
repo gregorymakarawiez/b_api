@@ -1,0 +1,93 @@
+/* CSS used here will be applied after bootstrap.css */
+
+
+:root {
+  --header-background-color: lightblue;
+  --header-height: 20px;
+  --body-background-color: white;
+  --footer-background-color: lightblue;
+}
+
+  
+.header {  
+background-color: var(--header-background-color);
+height: var(--header-background-color);    
+line-height:20px;    
+}
+
+.body {
+  background-color: var(--body-background-color);
+  vertical-align: top;
+  padding-top: 10px;
+  width:100%;
+}
+
+.footer {  
+background-color: var(--footer-background-color);
+line-height:20px;    
+}
+
+.container {
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
+[class*="col-"] {
+  border: 1px dashed blue;
+  border-radius: 6px;
+}
+
+body {
+    
+    padding-top: 60px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.glyphicon-hover {
+    border-radius: 25px;
+    border: 1px solid transparent;
+    padding: 2px;
+}
+
+.glyphicon-hover:hover, .glyphicon:focus {
+    border-radius: 5px;
+    border: 1px solid black;
+    color: red;
+}
+
+
+
+@media (min-width: 768px) {
+  .navbar-right .dropdown-menu > li > a {
+    padding-right: 46px;
+    position: relative;
+
+  }
+  .navbar-right .dropdown-menu > li > a > .glyphicon {
+    display: block;
+    position: absolute;
+    right: 20px;
+    top: 5px;
+
+  }
+}
+
+.navbar-nav > li > a, .navbar-brand {
+    padding-top:4px !important; 
+    padding-bottom:0 !important;
+    height: 40px;
+}
+.navbar {min-height:0px !important;}
+
+.form textarea, .post-form input {
+    width: 100%;
+}

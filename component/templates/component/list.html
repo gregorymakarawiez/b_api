@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+    <h1>Component<a href="{% url 'component:new' %}"> <span class="glyphicon glyphicon-plus"></span></a></h1>
+    </br>
+
+{% if components %}
+
+    <table id="list" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Author</th>
+                <th>Created on</th>
+                <th class="no-sort"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+  {% for component in components %}
+            <tr>
+                <td><a href="{% url 'component:edit' component.pk %}">{{component.name}}</a></td>
+                <td><a href="#">{{component.author}}</a></td>
+                <td><a href="#">{{component.created_date}}</a></td>
+                <td><a href="{% url 'component:delete' component.pk %}"><span class="glyphicon glyphicon-remove"></span></a></td>
+            </tr>
+  {% endfor %}
+        </tbody>
+    </table>
+
+{% endif %}
+{% endblock %}
+
+
+
+
+
+
+{% block extra_javascript %}
+
+$(document).ready(function(){
+    $('#list').DataTable();
+});
+
+{% endblock %}
