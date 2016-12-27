@@ -32,6 +32,7 @@ line-height:20px;
   padding-left: 10px;
   margin-right: 0px;
   margin-left: 0px;
+  width: 100%;
 }
 
 [class*="col-"] {

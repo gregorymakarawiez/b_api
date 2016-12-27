@@ -10,62 +10,6 @@ from B_Api.widgets import ScriptWidget
 
 
 
-"""class Port(models.Model):
-
-    class IO_Type(Enum):
-        UNDEFINED=0
-        INLET=1
-        OUTLET=2
- 
-    DATA_TYPE_CHOICES=(
-    ('String','String'),
-    ('Float','Float'),
-    )
-
-    DATA_CONSTRUCTORS={'String': {'constructor':models.TextField,'parameters':{'default':""}},
-                       'Float':  {'constructor':models.FloatField,'parameters':{'default':0}},
-                      }
-
-    name = models.CharField(max_length=200)
-    io_type =IO_Type.UNDEFINED 
-    data_type= models.CharField(choices=DATA_TYPE_CHOICES, max_length=10, default='String') 
-    
-    # select and use constructor suited to data type
-    data_constructor=DATA_CONSTRUCTORS[data_type.default]['constructor']
-    parameters=DATA_CONSTRUCTORS[data_type.default]['parameters']
-    value=data_constructor(**parameters)
-
-    def __str__(self):
-        return self.name
-   
-    class Meta:
-        abstract=True
-
-class I_Port(Port):
-
-    io_type = Port.IO_Type.INLET
-    #component = models.ForeignKey('Component',on_delete=models.CASCADE,related_name="i_ports")
-
-class O_Port(Port):
-
-    io_type = Port.IO_Type.OUTLET
-    #component = models.ForeignKey('Component',on_delete=models.CASCADE,related_name="o_ports")
-
-
-   class Script(models.Model):
-
-    LANGUAGE_CHOICES=(
-    ("python", "Python"),
-    )
-
-
-    name = models.CharField(max_length=200, default="")
-    language = models.CharField(choices=LANGUAGE_CHOICES, max_length=20, default="python")
-    script  = models.TextField(default="")
-
-    def __str__(self):
-        return self.name"""
-
 
 class PythonField(models.TextField):
 
@@ -255,7 +199,7 @@ class ListField(PythonField):
 
 class Component(Publishable):
     inlet_ports=models.TextField()
-    #outlet_ports=models.TextField()
+    outlet_ports=models.TextField()
     function = models.TextField() 
     jacobian = models.TextField() 
 
