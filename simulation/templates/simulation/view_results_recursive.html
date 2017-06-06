@@ -1,0 +1,34 @@
+
+{% load custom_filters %}    
+    {%if child.children %}
+        <fieldset class='edit_data_fieldset'>
+        <legend>{{data|index:child.id|index:"name"}}</legend>
+
+        {%for ch in child.children %}     
+            {%with child=ch template_name="simulation/view_results_recursive.html" %}
+                {%include template_name%}
+            {%endwith%}
+        {%endfor%}
+        </fieldset>
+    {%else%}
+        <li>
+            {%with field=data|index:child.id name=data|index:child.id|index:"name"  type=data|index:child.id|index:"type" %}
+                {%if type != 'category'  %}
+                     {%if form|index:name|required  %}
+                         <div class="form-group required"> 
+                     {%else%}  
+                         <div class="form-group "> 
+                     {%endif%}                                       
+                     <label class="control-label" for={{form|index:name|label}}  >{{name}}</label>
+                     {{ form|index:name|add_class:"form-control"}}
+                       
+                   </div>
+                {%endif%}
+            {%endwith%}  
+
+        </li>
+  
+
+    {%endif%}
+
+

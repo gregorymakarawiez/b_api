@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% load custom_filters %}
+
+
+{% block extra_js_files %}
+     <script src="{% static 'jquery.steps-1.1.0/jquery.steps.min.js' %}" type="text/javascript" charset="utf-8"></script>
+     <script src="{% static 'quill/js/quill.min.js' %}" type="text/javascript" charset="utf-8"></script>
+{% endblock %} 
+
+{% block extra_css_files %}
+     <link rel="stylesheet" href="{% static 'jquery.steps-1.1.0/jquery.steps.css' %}">
+     <link rel="stylesheet" href="{% static 'quill/css/quill.snow.css' %}">
+     <link rel="stylesheet" href="{% static 'quill/css/quill_editor.css' %}">
+{% endblock %}
+ 
+
+{% block content %}
+
+
+      <form method="POST" class="form">{% csrf_token %}
+
+      <!-- Form heading -->     
+      <div class='panel panel-primary'> 
+        <div class='panel-heading'> 
+          <h1>New Simulation</h1>
+         </div> 
+      </div> 
+
+      <!-- Display form errors -->
+      {{ form.non_field_errors }}
+  
+      <div class='panel-body'> 
+
+        <!-- 1.1. Input "name"-->    
+        <div class="form-group">
+          {{ form.name.errors }}
+          <label class="control-label" for={{ form.name.id_for_label }}>{{ form.name.label }}</label>
+          {{ form.name | add_class:"form-control"}}
+        </div>
+
+        <!-- 1.2. Input "desription"-->    
+        <div class="form-group">
+          {{ form.description.errors }}
+          <label class='control-label' for={{ form.description.id_for_label}}>Description</label>
+          {{ form.description | add_class:"form-control" }}
+        </div>
+
+
+        <!-- 1.3. Input "component"-->    
+        <div class="form-group">
+          <!--{{ form.component.errors }}-->
+          <label class='control-label' for={{ form.component.id_for_label}}>Component</label>
+          {{ form.component | add_class:"form-control" }}
+        </div>
+
+
+      </div>
+
+      <button type="submit" value="save" class="save btn btn-primary my_btn">Save</button>
+
+    </form> 
+ 
+
+{% endblock %}
+

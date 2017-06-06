@@ -28,6 +28,7 @@ line-height:20px;
 }
 
 .container {
+  overflow:auto;
   padding-right: 10px;
   padding-left: 10px;
   margin-right: 0px;
@@ -35,10 +36,10 @@ line-height:20px;
   width: 100%;
 }
 
-[class*="col-"] {
+/*[class*="col-"] {
   border: 1px dashed blue;
   border-radius: 6px;
-}
+}*/
 
 body {
     
@@ -48,7 +49,7 @@ body {
 
 /* Set padding to keep content from hitting the edges */
 
-.body-content {
+.body content {
     padding-left: 15px;
     padding-right: 15px;
 }
@@ -91,4 +92,35 @@ body {
 
 .form textarea, .post-form input {
     width: 100%;
+}
+
+.form {
+display: block;
+}
+
+.my_btn{
+   margin-top: 20px;
+   margin-bottom: 20px;
+   margin-right: 20px;
+   margin-left: 20px;
+}
+
+.white{
+ color:white;
+}
+
+
+.required label:after {
+    color: #e32;
+    content: ' *';
+    display:inline;
+}
+
+main_window{
+    position:relative;
+}
+
+help_window{
+    position:absolute;
+    bottom:0px;
 }

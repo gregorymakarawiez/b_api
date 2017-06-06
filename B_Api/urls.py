@@ -22,7 +22,10 @@ from . import views, forms, settings
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm
 
+#from simulation.forms import ContactForm1, ContactForm2, ContactForm3
+
 admin.autodiscover()
+
 
 
 urlpatterns = [
@@ -32,6 +35,8 @@ urlpatterns = [
     url(r'^login/$', auth_views.login, {'template_name': 'login.html', 'authentication_form': LoginForm},name='login'),
     url(r'^logout/$', auth_views.logout,{'template_name': 'login.html', 'next_page': settings.LOGIN_URL}, name='logout'),
     url(r'^component/', include('component.urls')),
+    url(r'^simulation/', include('simulation.urls')),
+
 ]
 
 

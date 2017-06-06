@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load custom_filters %}
+
+{% block extra_js_files %}
+{% endblock %} 
+
+{% block extra_css_files %}
+     <link rel="stylesheet" href="{% static 'css/form-wizard.css' %}">
+{% endblock %}
+
+
+
+{% block content %}
+
+
+        <!-- Top content -->
+
+                            
+                
+                <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 form-box">
+                    <div class="wizard">
+                        <form method="POST" class="f1">{% csrf_token %}
+
+                            <header class="row">
+                                <div class="row errors">
+                                    <!-- Display form errors -->
+                                    {{ form.non_field_errors }}
+                                </div>
+
+                    		<div class="f1-steps row">
+                                    {% for template in templates %}
+                                        {% if forloop.first %}
+                    			    <div class="f1-step active">
+                                        {% else%}
+                    			    <div class="f1-step inactive">
+                                        {% endif%}       
+                    				<div class="f1-step-icon"></div>
+                    				<p>{{ steps|index:forloop.counter0 }}</p>
+                    			</div>
+                                    {% endfor %}
+                                </div>
+                            </header>
+                    		
+                                {% for template in templates %}
+                                    <fieldset>
+                                        <div class="f1-content row">
+                                            {%  include template %}
+                                        </div>
+                                       
+                                        <div class="f1-buttons row">
+                                            {% if not forloop.first %}
+                                                <button type="button" class="btn btn-primary btn-previous">Previous</button>
+                                            {% endif%}
+                                            {% if not forloop.last %}
+                                                <button type="button" class="btn btn-primary btn-next ">Next</button>
+                                            {% endif%}                     
+                                            <button type="submit" value="save" class="btn btn-primary btn-submit">Submit</button>
+                                        </div>
+                                       
+                                    </fieldset>
+                                {% endfor %}
+                    		                    	
+                    	</form>
+                    </div>
+                </div>
+                    
+            </div>
+
+
+<script>
+
+jQuery(document).ready(function() {
+	
+    /*
+        Form
+    */
+    $('.f1 fieldset:first').fadeIn();
+
+  
+    /*$('.f1 input[type="text"], .f1 input[type="password"], .f1 textarea').on('focus', function() {
+    	$(this).removeClass('input-error');
+    });*/
+    
+    // next step
+    $('.f1 .btn-next').on('click', function() {
+    	var parent_fieldset = $(this).parents('fieldset');
+    	var next_step = true;
+    	// navigation steps / progress steps
+    	var current_active_step = $(this).parents('.f1').find('.f1-step.active');
+    	
+    	
+    	if( next_step ) {
+    		parent_fieldset.fadeOut(400, function() {
+    			// change icons
+    			current_active_step.removeClass('active').addClass('inactive').next().addClass('active');
+
+    			// show next step
+	    		$(this).next().fadeIn();
+	    	});
+    	}
+    	
+    });
+    
+    // previous step
+    $('.f1 .btn-previous').on('click', function() {
+    	// navigation steps / progress steps
+    	var current_active_step = $(this).parents('.f1').find('.f1-step.active');
+    	
+    	$(this).parents('fieldset').fadeOut(400, function() {
+    		// change icons
+    		current_active_step.removeClass('active').addClass('inactive').prev().removeClass('inactive').addClass('active');
+
+    		// show previous step
+    		$(this).prev().fadeIn();
+    	});
+
+    });
+    
+    // submit
+    /*$('.f1').on('submit', function(e) {
+    	
+    	// fields validation
+    	$(this).find('input[type="text"], input[type="password"], textarea').each(function() {
+    		if( $(this).val() == "" ) {
+    			e.preventDefault();
+    			$(this).addClass('input-error');
+    		}
+    		else {
+    			$(this).removeClass('input-error');
+    		}
+    	});
+    	// fields validation
+    	
+    });*/
+    
+
+
+   
+});
+
+</script>
+
+
+{% endblock %}
+
+
+
+
+
+{% block extra_javascript %}
+
+
+
+{% endblock %} 
+

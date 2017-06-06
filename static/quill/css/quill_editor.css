@@ -4,5 +4,14 @@
     width: 100%;
     height:200px;
     min-height:200px;
-    margin: 40px auto;
+    margin-top: inherit;
+    margin-bottom: 80px;
+    margin-right: 40px auto;
+    margin-left: 40px auto;
+}
+
+.quill_editor:focus { 
+    outline: none;
+    border-color: blue;
+    box-shadow: blue;
 }

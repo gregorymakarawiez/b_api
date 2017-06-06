@@ -1,38 +1,260 @@
-{% extends 'component/port_editor.html' %}
+<!-- Expected Context
+{'name':name,'value':value} -->
 
-{% load staticfiles %}
 
-{% block left_panel %}
 
-<!--Hidden fields to save port tree structure and data (json format) -->
-<!--<textarea name={{name}} style="display:none;"> %(value)s </textarea>-->
-<textarea name={{name}}> {{value}} </textarea>
 
-<!--
+
+<!--Hidden field to save port tree structure and data (json format) -->
+<textarea name="{{name}}" style="display:none;"> {{value}} </textarea>
+
+<!--DOM element that acommodates jstree  -->
 <div class="form-group">
-  <div id="{{name}}_jstree"></div>
-  <span class="help-block">To edit port tree, right click on nodes</span>
+    <div id="{{name}}_jstree"></div>
+    <span class="help-block">To edit port tree, right click on nodes</span>
 </div>
--->
-<!--        
-<script type="text/javascript" charset="utf-8">
 
-  // get handle to DOM widget storing port tree
-  var hidden_text_DOM = $('textarea[name={{name}}]'); // hidden textarea to save port tree structure and data
 
-  // load json data from DOM widget
-  var json=DOM_to_json(hidden_text_DOM);
-  console.dir(json);
+
+
+
+<script type="text/javascript" charset="utf-8"> 
           
+    // name space
+    var {{name}}={};            
+
+      // 1 - load / save operations with hidden textarea
+      //------------------------------------------------
+
+      {{name}}.DOM_to_json=function(DOM_handle){
+
+            // get data saved in hidden field
+            var DOM_val=DOM_handle.val();
+
+            var json={};
+            try {
+              // import port tree structure and data from hidden textarea
+              json=JSON.parse(DOM_val);
+            } catch (e) {
+              // for new port tree, give default values
+              json["structure"]=[{ "text" : "{{name}}", "type": "root", "children" : []}];
+              json["data"]={};
+            }
+
+             return json;
+      };  //DOM_to_json end
 
 
-          // define jstree settings
-          $("{{name}}_jstree").jstree({
+
+      {{name}}.json_to_DOM=function(DOM_handle,json){
+
+            try{
+              var value=JSON.stringify(json);
+
+              DOM_handle.val(value);
+            } catch (e) {
+              alert('error');
+              console.error("json_to_DOM error:", e);
+            }
+
+      }; //json_to_DOM end
+
+
+
+     // 2 - jstree operations
+     //----------------------
+
+
+      {{name}}.jstree_onchange=function(DOM_handle, jstree_obj){
+        // save js tree structure in hidden field
+
+            var json={{name}}.DOM_to_json(DOM_handle);
+            json["structure"]=jstree_obj.get_json();
+            {{name}}.json_to_DOM(DOM_handle,json);
+
+      };
+
+
+      {{name}}.set_nodes_data=function(DOM_handle, node, property, value){
+        // save form data in hidden field
+
+            var json={{name}}.DOM_to_json(DOM_handle);
+
+            if (property==="_all"){
+              json["data"][node]=value;
+            }
+            else{
+               json["data"][node][property]=value;
+            }
+            {{name}}.json_to_DOM(DOM_handle,json);
+
+      };
+
+
+      {{name}}.get_nodes_data=function(DOM_handle, node, property){
+
+
+            var json={{name}}.DOM_to_json(DOM_handle);
+            var node_data=json["data"][node];
+
+            if (node in json["data"]){
+              var node_data=json["data"][node];
+            }
+            else{
+              return {};
+            }
+
+            if (property in node_data){
+              value=node_data[property];
+            }
+            else if(property==="_all"){
+              value=node_data
+            }
+            else{
+              value={};
+            }
+
+            return value;
+      };
+
+
+      {{name}}.nodes_ondelete=function(DOM_handle, tree, node){
+
+            // get port json saved in hidden textarea
+            var json={{name}}.DOM_to_json(DOM_handle);
+
+            // get all descendants of deleted node
+            var descendants_id=[];
+             {{name}}.get_descendants_id(tree,node.id,descendants_id);
+
+            // remove from json.data all entries relative to descendants of the delete node (delete node included)
+             {{name}}.update_data_on_node_delete(json,descendants_id)
+
+            // save json in hidden textarea
+            {{name}}.json_to_DOM(DOM_handle,json);
+
+      };
+
+      {{name}}.update_data_on_node_delete=function(json,descendants_id){
+
+             for (i=0;i<descendants_id.length;i++){
+                 delete json["data"][descendants_id[i]];
+             }
+      };
+
+
+      {{name}}.get_descendants_id=function(tree,node_id,nodes_id) {
+
+            // Get the actual node
+            var node = tree.get_node(node_id);
+
+            // Add it to the results
+            nodes_id.push(node_id);
+
+            // Attempt to traverse if the node has children
+            if (tree.is_parent(node)) {
+              $.each(node.children, function(index, child) {
+                 {{name}}.get_descendants_id(tree,child,nodes_id);
+              });
+            }
+      };
+
+
+     // 3 - listeners on forms
+     //----------------------
+
+
+     {{name}}_port_name_onblur=function(event){
+        // update port name in left panel according to the one given in the right panel form
+
+        // get jstree object
+        var tree=$("#{{name}}_jstree").jstree();
+
+        // get selected node in left panel jstree
+        var active_node=$("#{{name}}_jstree").jstree('get_selected');
+
+        // get name value in right panel form
+        var new_name=$(event.target).val();
+
+        // form full name by adding a suffix that traces back the parent categories 
+        var parent = $("#" + active_node).parent();
+
+        //var parent=active_node.parent();  
+        //console.dir(parent);  
+        //console.dir(parent.parent());  
+
+
+        // rename jstree node after name provided in right panel form
+        $("#{{name}}_jstree").jstree('rename_node', active_node , new_name );
+
+        // save changes in hidden textarea
+
+          // save new node name
+          {{name}}.set_nodes_data({{name}}.hidden_text_DOM, active_node[0], "name", new_name);
+
+          // save tree structure
+          {{name}}.jstree_onchange({{name}}.hidden_text_DOM, tree);
+
+      };
+
+
+      {{name}}_port_description_onblur=function(event){
+
+        // get jstree object
+        var tree=$("#{{name}}_jstree").jstree();
+
+        // save new value
+        var active_node=$("#{{name}}_jstree").jstree('get_selected');
+        var new_description=$(event.target).val();
+         {{name}}.set_nodes_data({{name}}.hidden_text_DOM, active_node[0], "description", new_description);
+
+        // save tree structure change in hidden field
+         {{name}}.jstree_onchange({{name}}.hidden_text_DOM, tree);
+
+      };
+
+      {{name}}_port_default_onblur=function(event){
+
+        // get jstree object
+        var tree=$("#{{name}}_jstree").jstree();
+
+        // save new value in
+        var active_node=$("#{{name}}_jstree").jstree('get_selected');
+        var new_default=$(event.target).val();
+         {{name}}.set_nodes_data({{name}}.hidden_text_DOM, active_node[0], "default", new_default);
+
+        // save tree structure change in hidden field
+         {{name}}.jstree_onchange({{name}}.hidden_text_DOM, tree);
+      };
+
+
+      // 4 - initialisations
+      //--------------------
+
+      {{name}}.init=function(){
+
+        //4.0 - change jsrender delimiters to prevent collision with django template tags
+        $.views.settings.delimiters("(%", "%)");
+
+
+        // 4.1 - properties
+
+        // get handle to DOM widget storing port tree
+        {{name}}.hidden_text_DOM = $("textarea[name={{name}}]"); // hidden textarea to save port tree structure and data
+
+
+        // load json data from DOM widget
+        {{name}}.json={{name}}.DOM_to_json({{name}}.hidden_text_DOM);
+
+
+        // 4.2 - define jstree settings
+
+          $("#{{name}}_jstree").jstree({
           "core" : {
             "animation" : 0,
             "check_callback" : true,
             "themes" : { "stripes" : false },
-            'data' : json["structure"]
+            'data' : {{name}}.json["structure"]
           },
           "types" : {
 
@@ -60,9 +282,9 @@
           "plugins" : ["state","contextmenu", "types"],
 
           "contextmenu": {
-            
+
             "items": function($node){
-              var tree=$("{{name}}_jstree").jstree(true);
+              var tree=$("#{{name}}_jstree").jstree(true);
 
               return {
                 "Create": {
@@ -86,20 +308,24 @@
                         var position = 'inside';
                         var parent = $node;
                         var newNode_data = { state: "open",  text: " ", type: "category" };
-                        var newNode=$("{{name}}_jstree").jstree().create_node(parent,newNode_data, "last");
-                        $("{{name}}_jstree").jstree("open_all");
+                        var newNode_id=$("#{{name}}_jstree").jstree().create_node(parent,newNode_data, "last");
+                        var newNode = $("#{{name}}_jstree").jstree().get_node(newNode_id);
+                        newNode_id= "{{name}}_" + newNode_id;
+                        $("#{{name}}_jstree").jstree().set_id(newNode,newNode_id);
+
+                        $("#{{name}}_jstree").jstree("open_all");
 
                         default_category_data={
                           type:"category",
                           name:"",
-                          description:"",
+                          full_name:"",
+                          description:""
                         };
 
-                        set_nodes_data(hidden_text_DOM, newNode,"_all", default_category_data);
+                        {{name}}.set_nodes_data({{name}}.hidden_text_DOM, newNode_id,"_all", default_category_data);
 
-                        console.dir($(this))
                         // save tree structure change in hidden field
-                        jstree_onchange(hidden_text_DOM, tree);
+                         {{name}}.jstree_onchange({{name}}.hidden_text_DOM, tree);
 
                       },
                     },//Category end
@@ -110,20 +336,25 @@
                         var position = 'inside';
                         var parent = $node;
                         var newNode_data = { state: "open", text: " ", type: "string" };
-                        var newNode=$("{{name}}_jstree").jstree().create_node(parent,newNode_data, "last");
-                        $("{{name}}_jstree").jstree("open_all");
+                        var newNode_id=$("#{{name}}_jstree").jstree().create_node(parent,newNode_data, "last");
+                        var newNode = $("#{{name}}_jstree").jstree().get_node(newNode_id);
+                        newNode_id= "{{name}}_" + newNode_id;
+                        $("#{{name}}_jstree").jstree().set_id(newNode,newNode_id);
+
+                        $("#{{name}}_jstree").jstree("open_all");
                         default_string_data={
                           type:"string",
                           name:"",
+                          full_name:"",
                           description:"",
                           default:""
                         };
 
-                        set_nodes_data(hidden_text_DOM, newNode,"_all", default_string_data);
+                         {{name}}.set_nodes_data({{name}}.hidden_text_DOM, newNode_id,"_all", default_string_data);
 
 
                         // save tree structure change in hidden field
-                        jstree_onchange(hidden_text_DOM, tree);
+                         {{name}}.jstree_onchange({{name}}.hidden_text_DOM, tree);
 
                       },
                     },//String end
@@ -135,24 +366,29 @@
                         var position = 'inside';
                         var parent = $node;
                         var newNode_data = { state: "open", text: " ", type: "float" };
-                        var newNode=$("{{name}}_jstree").jstree().create_node(parent,newNode_data, "last");
-                        $("{{name}}_jstree").jstree("open_all");
+                        var newNode_id=$("#{{name}}_jstree").jstree().create_node(parent,newNode_data, "last");
+                        var newNode = $("#{{name}}_jstree").jstree().get_node(newNode_id);
+                        newNode_id= "{{name}}_" + newNode_id;
+                        $("#{{name}}_jstree").jstree().set_id(newNode,newNode_id);
+
+                        $("#{{name}}_jstree").jstree("open_all");
 
                         default_float_data={
                           type:"float",
                           name:"",
+                          full_name:"",
                           description:"",
                           default:""
                         };
 
-                        set_nodes_data(hidden_text_DOM, newNode,"_all", default_float_data);
+                         {{name}}.set_nodes_data({{name}}.hidden_text_DOM, newNode_id,"_all", default_float_data);
 
                         // save tree structure change in hidden field
-                        jstree_onchange(hidden_text_DOM, tree);
+                         {{name}}.jstree_onchange({{name}}.hidden_text_DOM, tree);
                       },
                     },//Float end
                   }//submenu end
-                },//Create end     
+                },//Create end
 
                 "Delete": {
                 "label": "Delete node",
@@ -160,12 +396,12 @@
                 "action": function (obj) {
 
                      // delete node data
-                    nodes_ondelete(hidden_text_DOM, tree, $node);
+                     {{name}}.nodes_ondelete({{name}}.hidden_text_DOM, tree, $node);
 
-                    $("{{name}}_jstree").jstree('delete_node', $node);
+                    $("#{{name}}_jstree").jstree('delete_node', $node);
 
                     // save tree structure change in hidden field
-                    jstree_onchange(hidden_text_DOM, tree);                   
+                     {{name}}.jstree_onchange({{name}}.hidden_text_DOM, tree);
 
                   },
                   "_disabled": function(obj){
@@ -176,132 +412,57 @@
                         return false;
                     }
                   }
-                }// Delete End
-              };// return end             
-            }// items End
+                }// delete end
+              };// return end
+            }// items end
           }// contextmenu End
-       
-         });
+         });// jstree end
 
 
 
-          function DOM_to_json(DOM_handle){
-            // get data saved in hidden field
-            var DOM_val=DOM_handle.val();
-
-            var json={};
-            try {
-              // import port tree structure and data from hidden textarea
-              json=JSON.parse(DOM_val); 
-            } catch (e) {
-
-              // for new port tree, give default values
-              json["structure"]=[{ "text" : "Inlets", "type": "root", "children" : []}];
-              json["data"]={};              
-            }
-             return json;
-          }
-
-          function json_to_DOM(DOM_handle,json){
-            try{
-              var value=JSON.stringify(json);
-
-              DOM_handle.val(value);
-            } catch (e) {
-              console.error("json_to_DOM error:", e);
-            }
-          }
-
-          function jstree_onchange(DOM_handle, jstree_obj){
-            var json=DOM_to_json(DOM_handle);
-            console.dir("jstree_onchange - old structure");
-            console.dir(DOM_handle);
-            console.dir(jstree_obj);
-            json["structure"]=jstree_obj.get_json();
-            json_to_DOM(DOM_handle,json);
-            console.dir("jstree_onchange - new structure");
-            console.dir(DOM_handle.val());
-          }
-
-          function set_nodes_data(DOM_handle, node, property, value){
-            var json=DOM_to_json(DOM_handle);
-
-            if (property==="_all"){
-              json["data"][node]=value;             
-            }
-            else{
-               json["data"][node][property]=value;         
-            }
-            json_to_DOM(DOM_handle,json);
-          }
- 
-          function get_nodes_data(DOM_handle, node, property){
-
-            var json=DOM_to_json(DOM_handle);
-            var node_data=json["data"][node];
-     
-            if (node in json["data"]){
-              var node_data=json["data"][node]; 
-            }
-            else{           
-              return {};
-            }
-              
-            if (property in node_data){
-              value=node_data[property];             
-            }
-            else if(property==="_all"){
-              value=node_data
-            }
-            else{
-              value={};           
-            }
-            return value;
-          }
-         
-
-          function nodes_ondelete(DOM_handle, tree, node){
-            // get port json saved in hidden textarea 
-            var json=DOM_to_json(DOM_handle);
-            console.dir(json);
-
-            // get all descendants of deleted node
-            var descendants_id=[];
-            get_descendants_id(tree,node.id,descendants_id);
-
-            // remove from json.data all entries relative to descendants of the delete node (delete node included)
-            update_data_on_node_delete(json,descendants_id)
-
-            // save json in hidden textarea
-            json_to_DOM(DOM_handle,json);
-            console.dir(json);            
-          }
-
-          function update_data_on_node_delete(json,descendants_id){
-
-             for (i=0;i<descendants_id.length;i++){
-                 delete json["data"][descendants_id[i]];
-             }
-          }
+         // 4.3 - display edit form adapted to the port type selected in the left panel
+         $("#{{name}}_jstree").bind('select_node.jstree', function(evt, data){
 
 
-          function get_descendants_id(tree,node_id,nodes_id) {
+           // get selected node
+           var node=data.node
 
-            // Get the actual node
-            var node = tree.get_node(node_id);
+           // 4.3.1 - select html template
+           switch(node.type){
 
-            // Add it to the results
-            nodes_id.push(node_id);
+             case "category":
+               var port_form_html_tmpl=$.templates('#{{name}}_category_port_form_html_tmpl');
+               break;
+             case "string":
+               var port_form_html_tmpl=$.templates('#{{name}}_string_port_form_html_tmpl');
+               break;
+             case "float":
+               var port_form_html_tmpl=$.templates('#{{name}}_float_port_form_html_tmpl');
+               break;
+             default:
+               var port_form_html_tmpl=$.templates('#{{name}}_else_port_form_html_tmpl');
+           }
 
-            // Attempt to traverse if the node has children
-            if (tree.is_parent(node)) {
-              $.each(node.children, function(index, child) {
-                get_descendants_id(tree,child,nodes_id);
-              });
-            }
-          };
+           // 4.3.2 - fetch data for templating
+           node_data= {{name}}.get_nodes_data({{name}}.hidden_text_DOM, node.id, "_all")
+
+           // 4.3.3 - render right panel html
+           var port_form_html=port_form_html_tmpl.render(node_data);
+
+           $("#{{name}}_port-form").html(port_form_html);
+
+
+         })
+
+
+       };// init end
+
+
+
+
+      // 5 - Main program
+      //--------------------
+
+      {{name}}.init();
 
 </script>
--->
-
-{% endblock left_panel %}

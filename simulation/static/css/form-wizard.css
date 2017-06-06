@@ -1,0 +1,63 @@
+
+
+.wizard {border-radius:25px;
+         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+         height: 900px;
+         margin:20px;
+         padding:30px;
+         }
+
+
+
+.f1 {
+	padding: 25px; background: #fff;
+	-moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
+}
+.f1 h3 { margin-top: 0; margin-bottom: 5px; text-transform: uppercase; }
+
+
+.f1-steps { height:10%; overflow: hidden; margin: 20px; display:flex; justify-content: space-around; }
+
+
+.f1-step-icon {
+	display: inline-block; width: 20px; height: 20px; margin-top: 4px; background: #ddd;
+	font-size: 16px; color: #fff; line-height: 20px;
+	-moz-border-radius: 50%; -webkit-border-radius: 50%; border-radius: 50%;
+        float:center;
+}
+
+.f1-step.inactive .f1-step-icon {
+	background: #0000; border: 1px solid #265a88; color: #265a88; line-height: 20px;
+}
+.f1-step.active .f1-step-icon {
+	width: 20px; height: 20px; margin-top: 0; background: #265a88; font-size: 22px; line-height: 20px;
+}
+.f1-step p { color: #265a88; text-align: center; }
+.f1-step.inactive p { color: #265a88; }
+.f1-step.active p { font-weight: bold; color: #265a88; }
+
+.f1 fieldset { display: none; text-align: left; }
+
+.f1 .input-error { border-color: #265a88; }
+
+.f1-content{
+   max-height:600px;
+   overflow-x:hidden;
+   overflow-y:auto;
+}
+.f1-buttons{
+   height: 10%;
+   position: absolute;
+   bottom: 50px;
+}
+
+.edit_data_fieldset{
+float: left;     
+clear: both;     
+width: 100%;     
+margin: 0 0 1.5em 0;     
+padding: 0;     
+border: 1px solid #BFBAB0;     
+background-color: #F2EFE9;     
+background-repeat: repeat-x;  
+}

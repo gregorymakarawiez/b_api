@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+
+{% block extra_js_files %}
+       <script src="{% static 'ace_editor/js/ace.js' %}" type="text/javascript" charset="utf-8"></script>
+       <script src="{% static 'quill/js/quill.min.js' %}" type="text/javascript" charset="utf-8"></script>
+       <script src="{% static 'jstree/dist/jstree.min.js' %}" type="text/javascript" charset="utf-8"></script>
+       <script src="{% static 'jsrender/jsrender.min.js' %}" type="text/javascript" charset="utf-8"></script>
+{% endblock %} 
+
+{% block extra_css_files %}
+       <link rel="stylesheet" href="{% static 'ace_editor/css/ace_editor.css' %}">
+       <link rel="stylesheet" href="{% static 'quill/css/quill.snow.css' %}">
+       <link rel="stylesheet" href="{% static 'quill/css/quill_editor.css' %}">
+       <link rel="stylesheet" href="{% static 'jstree/dist/themes/default/style.min.css' %}">
+       <link rel="stylesheet" href="{% static 'css/component.css' %}">
+       <link rel="stylesheet" href="{% static 'b_api/css/form_preview.css' %}">
+{% endblock %}
+ 
+{% block content %}
+    <div id="form-preview" title="Form preview">
+        <form method="POST" class="form">{% csrf_token %}
+
+            <!-- Display form errors -->
+            {{ form.non_field_errors }}
+
+            <!-- Display form -->
+            {%for child in children %} 
+                    {%include "component/form_preview_fieldset.html" %}
+            {%endfor%}
+
+        </form>
+    </div>
+
+    <script>
+
+        $( function() {
+
+        $(".help_button").mouseenter(
+            function(){ // when the mouse pointer enters the element
+                // get help text associated with this help button
+                var help_text_id=$(this).attr('data-tag');
+                var text=$("#"+help_text_id).val();
+
+                // refresh help window content
+                help_window_editor.setText(text); 
+                
+                // open help window
+                $("#help_window").show();      
+            }
+        );
+
+        $(".help_button").mouseleave(
+            function(){ // when the mouse pointer leaves the element
+                // open help window
+                $("#help_window").hide();      
+            }
+        );           
+    });
+   
+</script>
+
+
+{% endblock %}

@@ -34,7 +34,7 @@ ALLOWED_HOSTS = []
 MY_APPS =   [
     'B_Api',
     'component',
-  
+    'simulation',  
 ]
 
 INSTALLED_APPS = [
@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles'
+    'django.contrib.staticfiles',
 ]
 INSTALLED_APPS+=MY_APPS
 print(INSTALLED_APPS)

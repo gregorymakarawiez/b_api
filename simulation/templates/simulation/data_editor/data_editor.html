@@ -1,0 +1,117 @@
+
+
+
+<!--Hidden field to save port tree structure and data (json format) -->
+<textarea name="{{name}}" style="display:none;"> {{value}} </textarea>
+
+
+
+
+<script type="text/javascript" charset="utf-8"> 
+          
+    // name space
+    var {{name}}={};            
+
+      // 1 - load / save operations with hidden textarea
+      //------------------------------------------------
+
+      {{name}}.DOM_to_json=function(DOM_handle){
+
+            // get data saved in hidden field
+            var DOM_val=DOM_handle.val();
+
+            var json={};
+            try {
+              // import port tree structure and data from hidden textarea
+              json=JSON.parse(DOM_val);
+            } catch (e) {
+              // for new simulation, give default values
+              json={};
+            }
+
+             return json;
+      };  //DOM_to_json end
+
+
+
+      {{name}}.json_to_DOM=function(DOM_handle,json){
+
+            try{
+              var value=JSON.stringify(json);
+
+              DOM_handle.val(value);
+            } catch (e) {
+              alert('error');
+              console.error("json_to_DOM error:", e);
+            }
+
+      }; //json_to_DOM end
+
+
+
+
+
+      // 2 - initialisations
+      //--------------------
+
+      {{name}}.init=function(){
+
+        //2.0 - change jsrender delimiters to prevent collision with django template tags
+        $.views.settings.delimiters("(%", "%)");
+
+
+        // 2.1 - properties
+
+        // get handle to DOM widget storing simulation data
+        {{name}}.hidden_text_DOM = $("textarea[name={{name}}]"); // hidden textarea to save simulation data
+
+
+        // load json data from DOM widget
+        {{name}}.json={{name}}.DOM_to_json({{name}}.hidden_text_DOM);
+
+
+        // get selected node
+        var node=data.node
+
+        // 4.3.1 - select html template
+           switch(node.type){
+
+             case "category":
+               var port_form_html_tmpl=$.templates('#{{name}}_category_port_form_html_tmpl');
+               break;
+             case "string":
+               var port_form_html_tmpl=$.templates('#{{name}}_string_port_form_html_tmpl');
+               break;
+             case "float":
+               var port_form_html_tmpl=$.templates('#{{name}}_float_port_form_html_tmpl');
+               break;
+             default:
+               var port_form_html_tmpl=$.templates('#{{name}}_else_port_form_html_tmpl');
+           }
+
+           // 4.3.2 - fetch data for templating
+           node_data= {{name}}.get_nodes_data({{name}}.hidden_text_DOM, node.id, "_all")
+
+           // 4.3.3 - render right panel html
+           var port_form_html=port_form_html_tmpl.render(node_data);
+
+           $("#{{name}}_port-form").html(port_form_html);
+
+
+         })
+
+
+       };// init end
+
+
+
+
+      // 5 - Main program
+      //--------------------
+
+      {{name}}.init();
+
+</script>
+
+
+

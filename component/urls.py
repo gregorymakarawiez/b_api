@@ -8,5 +8,6 @@ urlpatterns = [
     url(r'^new/$', views.new, name='new'),
     url(r'^(?P<pk>\d+)/edit/$', views.edit, name='edit'),
     url(r'^(?P<pk>\d+)/delete/$', views.delete, name='delete'),
+    url(r'^(?P<pk>\d+)/form_preview/$', views.form_preview, name='form_preview'),
 ]
 

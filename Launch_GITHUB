@@ -1,0 +1,9 @@
+
+
+GITHUB_ADDRESS=https://github.com/gregorymakarawiez/b_api.git
+COMMIT_TITLE=""
+
+#git add .
+#git commit -m $COMMIT_TITLE
+git remote add origin $GITHUB_ADDRESS
+git push -u origin master

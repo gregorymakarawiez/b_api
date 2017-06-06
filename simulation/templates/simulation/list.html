@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+      <!-- Form heading -->     
+      <div class='panel panel-primary'> 
+        <div class='panel-heading'> 
+          <h1>Simulation<a href="{% url 'simulation:new_details' %}"> <span class="glyphicon glyphicon-plus white"></span></a></h1>
+         </div> 
+      </div> 
+
+
+    
+
+
+{% if simulations %}
+    <div class='panel-body'> 
+
+    <table id="list" class="display" cellspacing="0" width="100%" padding="100px">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Author</th>
+                <th>Created on</th>
+                <th>Component</th>
+                <th class="no-sort"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+  {% for simulation in simulations %}
+            <tr>
+                <td><a href="{% url 'simulation:edit_details' pk=simulation.pk %}">{{simulation.name}}</a></td>
+                <td><a href="#">{{simulation.author}}</a></td>
+                <td><a href="#">{{simulation.created_date}}</a></td>
+                <td><a href="#">{{simulation.component.name}}</a></td>
+                <td><a href="{% url 'simulation:delete' simulation.pk %}"><span class="glyphicon glyphicon-remove"></span></a></td>
+            </tr>
+  {% endfor %}
+        </tbody>
+    </table>
+
+    </div>
+
+{% endif %}
+{% endblock %}
+
+
+
+
+
+
+{% block extra_javascript %}
+
+$(document).ready(function(){
+    $('#list').DataTable();
+});
+
+{% endblock %}

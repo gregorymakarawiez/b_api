@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% load staticfiles %}
+
+
+{% block extra_js_files %}
+       <script src="{% static 'quill/js/quill.min.js' %}" type="text/javascript" charset="utf-8"></script>
+       <script src="{% static 'jsrender/jsrender.min.js' %}" type="text/javascript" charset="utf-8"></script>
+{% endblock %} 
+
+{% block extra_css_files %}
+       <link rel="stylesheet" href="{% static 'quill/css/quill.snow.css' %}">
+       <link rel="stylesheet" href="{% static 'quill/css/quill_editor.css' %}">
+       <link rel="stylesheet" href="{% static 'b_api/css/form_preview.css' %}">
+{% endblock %}
+ 
+{% block content %}
+{% with children=ports|index:'structure'|index:0|index:'children' data=ports|index:'data' %}
+
+    <div class="container"><div class="panel-group">
+
+        <!-- 0 - Form heading -->     
+        <div class='panel panel-primary'> 
+            <div class='panel-heading'> 
+                <h1>Inlet data</h1>
+            </div> 
+        </div> 
+
+
+        <!-- 1 - Form body --> 
+        <div class='panel-body'>
+            <div id="form-preview" title="Form preview">
+                <form method="POST" class="form">{% csrf_token %}
+
+                    <!-- Display form errors -->
+                    {{ form.non_field_errors }}
+
+                    <!-- Display form -->
+                    {%for child in children %} 
+                        {%include "simulation/edit_data_recursive.html" %}
+                    {%endfor%}
+
+                    <div class="btn-group" role="group" aria-label="...">
+                        <button  type="submit"  name="to_edit_details" value="edit_details" class="btn btn-primary">Previous</button>
+                        <button  type="submit"  name="to_view_results" value="view_results" class="btn btn-primary">Next</button>
+                        <button type="submit"  name="to_list" value="list"  class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+{% endwith %}
+{% endblock %}  
+
+ 
+
+{% block extra_javascript %}
+
+    $( function() {
+
+        // 0 - name space
+        //------------------------------------------------
+
+        var {{prefix}}={};
+
+
+        // 1 - load / save operations with hidden textarea
+        //------------------------------------------------
+
+        //{{prefix}}.DOM_to_json=function(DOM_handle){
+
+            // get data saved in hidden field
+            //var DOM_val=DOM_handle.val();
+
+           // var json={};
+
+            //try {
+                // import data from hidden textarea
+           //     json=JSON.parse(DOM_val);
+           // } catch (e) {
+                // for new simulation, give default values
+           //     json={};
+            //}
+
+            //return json;
+        //};  //DOM_to_json end
+
+
+
+        //{{prefix}}.json_to_DOM=function(DOM_handle,json){
+
+            //try{
+                //var value=JSON.stringify(json);
+
+                //DOM_handle.val(value);
+            //} catch (e) {
+                //alert('error');
+                //console.error("json_to_DOM error:", e);
+            //}
+        //}; json_to_DOM end 
+
+
+        // 2 - initialisations
+        //------------------------------------------------
+
+        {{prefix}}.init=function(){
+
+            // 2.1 - properties
+
+            // get handle to DOM widget storing data
+            //{{prefix}}.hidden_text_DOM = $("textarea[name={{prefix}}]"); // hidden textarea to save data
+
+
+            // load json data from DOM widget
+            //{{prefix}}.json={{prefix}}.DOM_to_json({{prefix}}.hidden_text_DOM);
+
+
+
+            $(".help_button").mouseenter(
+                function(){ // when the mouse pointer enters the element
+                    // get help text associated with this help button
+                    var help_text_id=$(this).attr('data-tag');
+                    var text=$("#"+help_text_id).val();
+                    
+                    // refresh help window content
+                    help_window_editor.setText(text); 
+                
+                    // open help window
+                    $("#help_window").show();      
+                }
+            );
+
+            $(".help_button").mouseleave(
+                 function(){ // when the mouse pointer leaves the element
+                     // open help window
+                     $("#help_window").hide();      
+                 }
+            );
+        }; 
+
+        // 3 - main program
+        //------------------------------------------------
+
+        {{prefix}}.init();
+
+                 
+    });  
+   
+
+{% endblock %} 

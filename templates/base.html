@@ -23,6 +23,7 @@
        <!--<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-theme.min.css' %}">-->
        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
        <link rel="stylesheet" href="{% static 'dataTables/media/css/jquery.dataTables.min.css' %}">
        <link rel="stylesheet" href="{% static 'b_api/css/b_api.css' %}">
        {% block extra_css_files %}
@@ -31,7 +32,7 @@
 
 
     <body>
-        <nav class="navbar navbar-default navbar-fixed-top">
+        <nav id="menu" class="navbar navbar-default navbar-fixed-top">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -46,8 +47,7 @@
                     <ul class="nav navbar-nav">
                         <li> <a href="{% url 'home' %}">B Api</a> </li>
                         <li> <a href="#">Projects</a> </li>
-                        <li> <a href="#">Simulations</a> </li>
-                        <li> <a href="#">Models</a> </li>
+                        <li> <a href="{% url 'simulation:list' %}">Simulations</a> </li>
                         <li> <a href="{% url 'component:list' %}">Components</a> </li>
                     </ul>
 
@@ -55,7 +55,7 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li class="dropdown">
                                 <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                    <span class="glyphicon glyphicon-user"></span> gregory<span class="caret"></span>
+                                    <span class="glyphicon glyphicon-user"></span> {{user.username}}<span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a href="">Settings</a></li>
@@ -70,16 +70,24 @@
                </div> 	
     	    </div>
         </nav>
-
-    	<div class="content container">
-            {% block content %}
-            {% endblock %}
-    	</div>
+        <section id="main_window">
+            <article class="row content container">
+                {% block content %}
+                {% endblock %}
+            </article>
+            <article class="row">
+                <!--{% include "help_window.html" %}-->
+            </article> 
+       </section>
+ 
 
     	<div class="footer">
+ 
 	    {% block footer %}
        	    {% endblock %}
     	</div>
+   
+    </body>
 
 
     <script>
@@ -96,7 +104,9 @@
        {% block extra_javascript %}
        {% endblock %} 
     </script>
-   
-    </body>
+
 </html> 
 
+
+
+ 

@@ -1,0 +1,30 @@
+
+{% load custom_filters %}    
+    {%if child.children %}
+        <fieldset>
+        <legend>{{data|index:child.id|index:"name"}}</legend>
+
+        {%for ch in child.children %}     
+            {%with child=ch template_name="component/form_preview_fieldset.html" %}
+                {%include template_name%}
+            {%endwith%}
+        {%endfor%}
+
+        </fieldset>
+    {%else%}
+        <li>
+            {%with field=data|index:child.id name=data|index:child.id|index:"name"  %}
+                <label>{{name}}</label>
+                {{form|index:name}}
+                {%if field|index:"description" %}       
+                    <span data-tag="id_{{name}}_help_text" class="help_button glyphicon glyphicon-question-sign"></span>
+                    <textarea id="id_{{name}}_help_text" hidden> {{field|index:"description"}} </textarea>                   
+                {%endif%}
+
+            {%endwith%}
+        </li>
+  
+
+    {%endif%}
+
+
